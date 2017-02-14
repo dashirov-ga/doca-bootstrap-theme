@@ -10,7 +10,7 @@ const getLinks = (links, search) =>
     .filter(link => {
       if (link.get('private')) return false;
       if (search &&
-        link.get('title').toLowerCase().indexOf(search.toLowerCase()) === -1) {
+        (link.get('title') + link.get('self', {}).get('version') + link.get('self', {}).get('vendor') + link.get('self', {}).get('name')).toLowerCase().indexOf(search.toLowerCase()) === -1) {
         return false;
       }
       return true;
@@ -99,8 +99,22 @@ class Sidebar extends Component {
   }
 
   render() {
+    const elementStyle = { 'paddingLeft': '20px', 'color': 'gray' }
     const { schemas } = this.props;
     const { activeId, search } = this.state;
+
+    var vendors = schemas.valueSeq().reduce((obj, x) => Object.assign(obj, { [x.get('self').get('vendor')]: {} }), {});
+    var filtered_schemas = getLinks(schemas, search); 
+
+    for (let s of filtered_schemas) {
+      {/* organize schemas by vendor first, name second so hierarchy is Vendor > Name > Version  */}
+      let vendor = s.get('self').get('vendor'); 
+      let name = s.get('self').get('name'); 
+      if ( !(name in vendors[vendor]) ) {
+        vendors[vendor][name] = []; 
+      }
+      vendors[vendor][name].push(s);         
+    }
 
     return (
       <nav id="sidebar-wrapper">
@@ -112,23 +126,22 @@ class Sidebar extends Component {
             onChange={this.handleSearchChange}
           />
         </div>
-        {schemas.filter(schema => !schema.get('hidden')).valueSeq().map(schema =>
-          (getLinks(schema.get('links'), search).count() > 0 ?
-            <ul className="sidebar-nav" key={schema.get('id')}>
-              <li className="sidebar-category">{schema.get('title')}</li>
-              {getLinks(schema.get('links'), search).valueSeq().map(link =>
-                <li
-                  key={link.get('html_id')}
-                  className={link.get('html_id') === activeId ? 'active' : ''}
-                >
-                  <a href={`#${link.get('html_id')}`}>
-                    {link.get('title')}
-                  </a>
-                </li>
-              )}
-            </ul>
-          : null)
-        )}
+          {Object.keys(vendors).map( vendor => 
+            <div style={elementStyle}><h3>{ vendor }</h3>
+            <div id={'vendor-' + vendor } >
+                {Object.keys(vendors[vendor]).map(name =>
+                  <div id={'vendor-' + vendor + '-schema-' + name } style={elementStyle}><h4>{name}</h4>
+                      {vendors[vendor][name].map(schema => 
+                        
+                        <div style={elementStyle}>
+                          <a href={'#' + schema.get('html_id') + '-' + schema.get('self').get('version')}>v. {schema.get('self').get('version')}</a>
+                        </div>
+                      )}
+                  </div>
+                )}
+            </div>
+            </div>
+          )}
       </nav>
     );
   }
