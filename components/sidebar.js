@@ -134,7 +134,7 @@ class Sidebar extends Component {
                       {vendors[vendor][name].map(schema => 
                         
                         <div style={elementStyle}>
-                          <a href={'#' + schema.get('html_id') + '-' + schema.get('self').get('version')}>v. {schema.get('self').get('version')}</a>
+                          <a href={'#' + schema.get('self').get('vendor').replace(/\./g, '-') + '-' + schema.get('self').get('name') + '-' + schema.get('self').get('version') }>v. {schema.get('self').get('version')}</a>
                         </div>
                       )}
                   </div>

@@ -32,10 +32,11 @@ class Schema extends Component {
     const { showDefinition } = this.state;
     const { showJsonpath } = this.state.showJsonpath;
     const { showSql } = this.state.showSql;
+    var schema_id = schema.get('self').get('vendor').replace(/\./g, '-') + '-' + schema.get('self').get('name') + '-' + schema.get('self').get('version') ; 
     return (
-      <article id={schema.get('html_id') + '-' + schema.get('self').get('version') }  className="panel panel-primary">
+      <article id={schema_id}  className="panel panel-primary">
         <div className="panel-heading">
-          <h2>{schema.get('title')} v. {schema.get('self').get('version')}</h2>
+          <h2>{schema.get('title')? schema.get('title') : schema.get('self').get('name')} v. {schema.get('self').get('version')}</h2>
         </div>
 
         <div className="panel-body">
@@ -44,7 +45,7 @@ class Schema extends Component {
             <MarkdownPreview value={schema.get('extended_description')} />}
 
           <header>
-            <h4 id={`${schema.get('html_id')}-properties`}>
+            <h4 id={`${schema_id}-properties`}>
               Object definition{schema.getIn(['object_definition', 'objects']).count() > 0 &&
                 <span>s</span>}
             </h4>
