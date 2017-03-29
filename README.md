@@ -1,8 +1,8 @@
-# doca-bootstrap-theme
+# doca-snowplow-theme
 
 Simple [Twitter Boostrap 3](http://getbootstrap.com/) based theme for [doca](https://github.com/cloudflare/doca).
 
-It's supposed to be used in combination with [doca](https://github.com/cloudflare/doca) - a tool that scaffolds API documentation based on JSON HyperSchemas.
+It's supposed to be used in combination with [doca](https://github.com/cloudflare/doca) - a tool that scaffolds API documentation based on JSON Schemas.
 
 Please file any issues at the [doca](https://github.com/cloudflare/doca/issues) repository.
 
@@ -10,10 +10,10 @@ Please file any issues at the [doca](https://github.com/cloudflare/doca/issues) 
 
 ```
 npm install -g doca
-doca init -t bootstrap
+doca init -t snowplow
 ```
 
-This creates a new API documentation with `doca-bootstrap-theme` as a dependency.
+This creates a new API documentation with `doca-snowplow-theme` as a dependency.
 
 # How to create your own theme
 
